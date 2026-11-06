@@ -14,4 +14,7 @@ public class SharedFolder {
     @Column(name = "quota_mb", nullable = false) private Long quotaMb = 0L;
     @Column(name = "used_space_mb", nullable = false) private Long usedSpaceMb = 0L;
     @Column(name = "created_at", nullable = false) private LocalDateTime createdAt = LocalDateTime.now();
+    public void setName(String name) { this.name = name; }
+    public void setOwner(User owner) { this.owner = owner; }
+    public void setQuotaMb(Long quotaMb) { this.quotaMb = quotaMb; }
 }

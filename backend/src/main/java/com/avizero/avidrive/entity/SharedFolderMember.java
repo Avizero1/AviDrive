@@ -16,4 +16,10 @@ public class SharedFolderMember {
     @Column(name = "max_user_space_mb", nullable = false) private Long maxUserSpaceMb = 0L;
     @Column(name = "used_space_mb", nullable = false) private Long usedSpaceMb = 0L;
     @Column(name = "joined_at", nullable = false) private LocalDateTime joinedAt = LocalDateTime.now();
+    public void setFolder(SharedFolder folder) { this.folder = folder; }
+    public void setUser(User user) { this.user = user; }
+    public User getUser() { return user; }
+    public void setPermissions(String permissions) { this.permissions = permissions; }
+    public void setMaxFileSizeMb(Long value) { this.maxFileSizeMb = value; }
+    public void setMaxUserSpaceMb(Long value) { this.maxUserSpaceMb = value; }
 }
