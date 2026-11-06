@@ -33,4 +33,7 @@ public class User {
     public Long getUsedSpaceMb() { return usedSpaceMb; }
     public boolean isBlocked() { return blocked; }
     public void setPasswordHash(String passwordHash) { this.passwordHash = passwordHash; }
+    public void setUsername(String username) { this.username = username; }
+    public void setRole(String role) { this.role = role; }
+    public void setQuotaMb(Long quotaMb) { this.quotaMb = quotaMb; }
 }
