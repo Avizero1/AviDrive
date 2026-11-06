@@ -1,0 +1,5 @@
+import React from 'react';
+import { useNavigate } from 'react-router-dom';
+import api from '../services/api.js';
+import { useAuth } from '../context/AuthContext.jsx';
+export default function LoginPage(){const [username,setUsername]=React.useState('');const [password,setPassword]=React.useState('');const [error,setError]=React.useState('');const {login}=useAuth();const navigate=useNavigate();async function submit(e){e.preventDefault();setError('');try{const {data}=await api.post('/auth/login',{username,password});login(data.token);navigate('/')}catch(err){setError(err.response?.data?.error||'Не удалось войти')}}return <main className="page center"><form className="card form" onSubmit={submit}><h1>AviDrive</h1><p className="muted">Хранилище файлов от Avizero</p><input value={username} onChange={e=>setUsername(e.target.value)} placeholder="Введите логин" autoComplete="username" required/><input value={password} onChange={e=>setPassword(e.target.value)} type="password" placeholder="Пароль" autoComplete="current-password" required/>{error&&<div className="error">{error}</div>}<button>Войти</button></form></main>}
