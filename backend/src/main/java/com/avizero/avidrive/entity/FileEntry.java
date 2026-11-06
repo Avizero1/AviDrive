@@ -28,4 +28,17 @@ public class FileEntry {
     private LocalDateTime createdAt = LocalDateTime.now();
     @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedAt = LocalDateTime.now();
+
+    public Long getId() { return id; }
+    public String getName() { return name; }
+    public void setName(String name) { this.name = name; }
+    public String getPath() { return path; }
+    public void setPath(String path) { this.path = path; }
+    public void setDirectory(boolean directory) { this.directory = directory; }
+    public boolean isDirectory() { return directory; }
+    public void setSizeBytes(Long sizeBytes) { this.sizeBytes = sizeBytes; }
+    public FileEntry getParent() { return parent; }
+    public void setParent(FileEntry parent) { this.parent = parent; }
+    public User getOwner() { return owner; }
+    public void setOwner(User owner) { this.owner = owner; }
 }
