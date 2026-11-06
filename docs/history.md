@@ -1,8 +1,8 @@
 # История разработки AviDrive
 
-## 2026-11-06 — Шаги 0–20
+## 2026-11-06 — Шаги 0–21
 
-- **Шаги 0–19:** backend и frontend AviDrive, Windows debug-скрипты, Linux deployment и исправления скриптов.
-- **Шаг 20:** обновлён README.md с быстрым запуском Windows, установкой Debian/Ubuntu, командами mode-скриптов, API и правилами квот.
-- **Проверка:** `git diff --check` прошёл успешно.
+- **Шаги 0–20:** backend и frontend AviDrive, deployment-скрипты, исправления и документация.
+- **Шаг 21:** выполнено финальное тестирование проекта.
+- **Проверки:** `mvn -q -DskipTests package`, `npm run build`, `git diff --check`; рабочее дерево чистое.
 - **Статус:** ✅
