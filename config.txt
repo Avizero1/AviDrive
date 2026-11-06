@@ -1,0 +1,7 @@
+storage_path=./storage
+backend_port=8080
+frontend_port=3000
+ssl_enabled=false
+ssl_cert_path=
+ssl_key_path=
+global_quota_mb=0

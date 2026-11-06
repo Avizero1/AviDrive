@@ -1,0 +1,26 @@
+spring:
+  application:
+    name: avidrive
+  datasource:
+    url: jdbc:sqlite:./data/filestorage.db
+    driver-class-name: org.sqlite.JDBC
+  jpa:
+    database-platform: org.hibernate.community.dialect.SQLiteDialect
+    hibernate:
+      ddl-auto: update
+    show-sql: false
+  servlet:
+    multipart:
+      max-file-size: -1
+      max-request-size: -1
+
+server:
+  port: ${BACKEND_PORT:8080}
+
+app:
+  name: AviDrive
+  storage-path: ${STORAGE_PATH:./storage}
+  jwt:
+    secret: ${JWT_SECRET:your-secret-key-change-in-production-min-32-chars}
+    expiration: ${JWT_EXPIRATION:86400000}
+  global-quota-mb: ${GLOBAL_QUOTA_MB:0}
