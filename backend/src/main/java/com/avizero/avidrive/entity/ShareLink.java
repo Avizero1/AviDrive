@@ -23,4 +23,14 @@ public class ShareLink {
     @Column(name = "last_accessed_at") private LocalDateTime lastAccessedAt;
     @Column(name = "created_at", nullable = false) private LocalDateTime createdAt = LocalDateTime.now();
     @ManyToOne(fetch = FetchType.LAZY, optional = false) @JoinColumn(name = "created_by", nullable = false) private User createdBy;
+    public Long getId() { return id; }
+    public FileEntry getFile() { return file; }
+    public String getPermissions() { return permissions; }
+    public LocalDateTime getExpiresAt() { return expiresAt; }
+    public void setToken(String token) { this.token = token; }
+    public void setFile(FileEntry file) { this.file = file; }
+    public void setCreatedBy(User createdBy) { this.createdBy = createdBy; }
+    public void setPermissions(String permissions) { this.permissions = permissions; }
+    public void setExpiresAt(LocalDateTime expiresAt) { this.expiresAt = expiresAt; }
+    public void setPasswordHash(String passwordHash) { this.passwordHash = passwordHash; }
 }

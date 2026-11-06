@@ -18,4 +18,8 @@ public class FilePermission {
     private String permissions;
     @Column(name = "granted_at", nullable = false)
     private LocalDateTime grantedAt = LocalDateTime.now();
+    public void setFile(FileEntry file) { this.file = file; }
+    public void setUser(User user) { this.user = user; }
+    public void setPermissions(String permissions) { this.permissions = permissions; }
+    public void setGrantedAt(LocalDateTime grantedAt) { this.grantedAt = grantedAt; }
 }
