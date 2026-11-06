@@ -19,3 +19,9 @@
 - **Скрипты:** `mode.bat` и `mode.sh` работают напрямую с SQLite, проверяют наличие `sqlite3`, валидируют username и экранируют одинарные кавычки.
 - **Проверка:** `mvn -q -DskipTests package` завершился успешно; `mode.bat init-schema` создал таблицы `users` и `settings` в тестовой базе.
 - **Статус:** ✅
+
+## 2026-11-06 — Шаг 3: Аутентификация и безопасность
+
+- **Что сделано:** добавлены JWT-аутентификация, Spring Security, BCrypt, login/logout/me/password endpoints и ограничитель входа 10 попыток за 5 минут на username.
+- **Проверка:** `mvn -q -DskipTests package` завершился успешно.
+- **Статус:** ✅

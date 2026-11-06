@@ -24,4 +24,13 @@ public class User {
     private boolean blocked;
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt = LocalDateTime.now();
+
+    public Long getId() { return id; }
+    public String getUsername() { return username; }
+    public String getPasswordHash() { return passwordHash; }
+    public String getRole() { return role; }
+    public Long getQuotaMb() { return quotaMb; }
+    public Long getUsedSpaceMb() { return usedSpaceMb; }
+    public boolean isBlocked() { return blocked; }
+    public void setPasswordHash(String passwordHash) { this.passwordHash = passwordHash; }
 }
