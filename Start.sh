@@ -15,8 +15,11 @@ DB_PATH="/var/lib/avidrive/data/filestorage.db"
 SSL_ENABLED=false
 
 ask() { local prompt="$1" default="$2" value; read -r -p "$prompt [$default]: " value; printf '%s' "${value:-$default}"; }
-check_dependencies() { local packages=(openjdk-17-jdk maven nodejs npm sqlite3 curl git nginx certbot python3-certbot-nginx ufw unzip); apt-get update; apt-get install -y "${packages[@]}"; }
 create_directories() { install -d -m 0750 "$STORAGE_PATH" "$(dirname "$DB_PATH")"; }
+initialize_database() { install -d -m 0750 "$(dirname "$DB_PATH")"; DB_PATH="$DB_PATH" "$PWD/mode.sh" init-schema; }
+validate_configuration() { [[ "$BACKEND_PORT" =~ ^[0-9]+$ && "$BACKEND_PORT" -ge 1 && "$BACKEND_PORT" -le 65535 ]] || { echo "ERROR: invalid backend port"; exit 1; }; [[ "$FRONTEND_PORT" =~ ^[0-9]+$ && "$FRONTEND_PORT" -ge 1 && "$FRONTEND_PORT" -le 65535 ]] || { echo "ERROR: invalid frontend port"; exit 1; }; }
+ensure_apt_package() { apt-cache show "$1" >/dev/null 2>&1 || { echo "ERROR: package unavailable: $1"; exit 1; }; }
+check_dependencies() { local packages=(openjdk-17-jdk maven nodejs npm sqlite3 curl git nginx certbot python3-certbot-nginx ufw unzip); apt-get update; for package in "${packages[@]}"; do ensure_apt_package "$package"; done; apt-get install -y "${packages[@]}"; }
 create_config() { cat > /etc/avidrive.conf <<EOF
 BACKEND_PORT=$BACKEND_PORT
 FRONTEND_PORT=$FRONTEND_PORT
@@ -64,9 +67,12 @@ DOMAIN="$(ask 'Domain (empty for HTTP)' "$DOMAIN")"
 SSL_CHOICE="$(ask 'Enable SSL with certbot? (true/false)' "$SSL_ENABLED")"; SSL_ENABLED="$SSL_CHOICE"
 STORAGE_PATH="$(ask 'Storage path' "$STORAGE_PATH")"
 
+validate_configuration
 check_dependencies
 create_directories
 create_config
+( cd backend && mvn clean package -DskipTests )
+initialize_database
 ( cd backend && mvn clean package -DskipTests )
 ( cd frontend && npm install && npm run build )
 configure_ssl
