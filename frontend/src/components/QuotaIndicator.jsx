@@ -1,0 +1,3 @@
+import React from 'react';
+import api from '../services/api.js';
+export default function QuotaIndicator(){const [me,setMe]=React.useState(null);React.useEffect(()=>{api.get('/auth/me').then(r=>setMe(r.data)).catch(()=>{})},[]);if(!me)return null;const unlimited=!me.quotaMb;const percent=unlimited?0:Math.min(100,me.usedSpaceMb/me.quotaMb*100);const color=percent>=100?'#ef4444':percent>=95?'#f97316':percent>=80?'#eab308':'#22c55e';return <div className="quota"><span>{unlimited?`${me.usedSpaceMb} MB`: `${me.usedSpaceMb} MB из ${me.quotaMb} MB`}</span>{!unlimited&&<div className="quota-bar"><i style={{width:`${percent}%`,background:color}}/></div>}</div>}
