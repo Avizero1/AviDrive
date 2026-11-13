@@ -1,1 +1,1 @@
-package com.avizero.avidrive.repository; import com.avizero.avidrive.domain.Link; import org.springframework.data.jpa.repository.JpaRepository; public interface LinkRepository extends JpaRepository<Link,Long>{}
+package com.avizero.avidrive.repository; import com.avizero.avidrive.domain.Link; import java.util.*; import org.springframework.data.jpa.repository.JpaRepository; public interface LinkRepository extends JpaRepository<Link,Long>{Optional<Link> findByToken(String token);}
