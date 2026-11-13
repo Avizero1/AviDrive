@@ -4,3 +4,4 @@
 .viewer{max-width:90vw;max-height:90vh;overflow:auto}.viewer img{max-height:65vh;object-fit:contain}.viewer video,.viewer iframe{width:min(80vw,900px);height:60vh}.viewer audio{width:100%}
 .quota-warning{color:#fbbf24;background:#422006;border:1px solid #92400e;padding:12px;border-radius:8px}.public-card{margin:auto}
 .shared-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px;padding:16px}.shared-card{display:flex;flex-direction:column;gap:8px;padding:18px;background:var(--surface-2);border:1px solid var(--border);border-radius:10px}.shared-card span,.shared-card small{color:var(--text-muted)}
+.quota{position:relative;min-width:150px;padding-bottom:7px}.quota i{position:absolute;bottom:0;left:0;height:3px;background:#22c55e;border-radius:3px}.quota-warn i{background:#f59e0b}.quota-danger i{background:#ef4444}
