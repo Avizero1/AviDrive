@@ -1,0 +1,77 @@
+PRAGMA foreign_keys = ON;
+PRAGMA journal_mode = WAL;
+
+CREATE TABLE IF NOT EXISTS settings (
+  id INTEGER PRIMARY KEY CHECK (id = 1), global_quota_mb INTEGER NOT NULL DEFAULT 0,
+  jwt_secret TEXT NOT NULL, backend_port INTEGER NOT NULL DEFAULT 8080,
+  frontend_port INTEGER NOT NULL DEFAULT 3000, ssl_enabled INTEGER NOT NULL DEFAULT 0,
+  schema_version INTEGER NOT NULL DEFAULT 1, backup_keep_count INTEGER NOT NULL DEFAULT 7,
+  backup_time TEXT NOT NULL DEFAULT '03:00'
+);
+INSERT OR IGNORE INTO settings(id, jwt_secret) VALUES (1, 'change-me-please-use-a-secret-of-32-chars');
+
+CREATE TABLE IF NOT EXISTS users (
+  id INTEGER PRIMARY KEY AUTOINCREMENT, username TEXT NOT NULL UNIQUE, password_hash TEXT NOT NULL,
+  role TEXT NOT NULL DEFAULT 'USER' CHECK(role IN ('USER','MODERATOR','ADMIN')),
+  quota_mb INTEGER NOT NULL DEFAULT 0, used_bytes INTEGER NOT NULL DEFAULT 0,
+  is_blocked INTEGER NOT NULL DEFAULT 0, created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+CREATE TABLE IF NOT EXISTS login_attempts (
+  id INTEGER PRIMARY KEY AUTOINCREMENT, username TEXT NOT NULL, ip TEXT, attempted_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+CREATE INDEX IF NOT EXISTS idx_login_attempts_username_time ON login_attempts(username, attempted_at);
+
+CREATE TABLE IF NOT EXISTS folders (
+  id INTEGER PRIMARY KEY AUTOINCREMENT, owner_id INTEGER NOT NULL, parent_id INTEGER,
+  name TEXT NOT NULL, is_shared INTEGER NOT NULL DEFAULT 0, created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP, UNIQUE(owner_id, parent_id, name),
+  FOREIGN KEY(owner_id) REFERENCES users(id) ON DELETE CASCADE, FOREIGN KEY(parent_id) REFERENCES folders(id) ON DELETE CASCADE
+);
+CREATE TABLE IF NOT EXISTS files (
+  id INTEGER PRIMARY KEY AUTOINCREMENT, owner_id INTEGER NOT NULL, folder_id INTEGER,
+  name TEXT NOT NULL, storage_path TEXT NOT NULL, size_bytes INTEGER NOT NULL DEFAULT 0,
+  mime_type TEXT, created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP, updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY(owner_id) REFERENCES users(id) ON DELETE CASCADE, FOREIGN KEY(folder_id) REFERENCES folders(id) ON DELETE CASCADE,
+  UNIQUE(folder_id, name)
+);
+CREATE INDEX IF NOT EXISTS idx_files_name ON files(name);
+
+CREATE TABLE IF NOT EXISTS links (
+  id INTEGER PRIMARY KEY AUTOINCREMENT, token TEXT NOT NULL UNIQUE, owner_id INTEGER NOT NULL,
+  file_id INTEGER, folder_id INTEGER, expires_at TEXT, password_hash TEXT,
+  can_view INTEGER NOT NULL DEFAULT 1, can_download INTEGER NOT NULL DEFAULT 0, can_upload INTEGER NOT NULL DEFAULT 0,
+  can_delete INTEGER NOT NULL DEFAULT 0, can_rename INTEGER NOT NULL DEFAULT 0, max_file_size_mb INTEGER,
+  max_total_size_mb INTEGER, view_count INTEGER NOT NULL DEFAULT 0, download_count INTEGER NOT NULL DEFAULT 0,
+  upload_count INTEGER NOT NULL DEFAULT 0, last_accessed_at TEXT,
+  FOREIGN KEY(owner_id) REFERENCES users(id) ON DELETE CASCADE, FOREIGN KEY(file_id) REFERENCES files(id) ON DELETE CASCADE,
+  FOREIGN KEY(folder_id) REFERENCES folders(id) ON DELETE CASCADE, CHECK((file_id IS NULL) != (folder_id IS NULL))
+);
+CREATE TABLE IF NOT EXISTS shared_folder_members (
+  folder_id INTEGER NOT NULL, user_id INTEGER NOT NULL, can_view INTEGER NOT NULL DEFAULT 1,
+  can_download INTEGER NOT NULL DEFAULT 0, can_upload INTEGER NOT NULL DEFAULT 0, can_delete INTEGER NOT NULL DEFAULT 0,
+  can_rename INTEGER NOT NULL DEFAULT 0, max_file_size_mb INTEGER, max_user_space_mb INTEGER,
+  PRIMARY KEY(folder_id, user_id), FOREIGN KEY(folder_id) REFERENCES folders(id) ON DELETE CASCADE,
+  FOREIGN KEY(user_id) REFERENCES users(id) ON DELETE CASCADE
+);
+CREATE TABLE IF NOT EXISTS uploads (
+  id INTEGER PRIMARY KEY AUTOINCREMENT, session_uuid TEXT NOT NULL UNIQUE, owner_id INTEGER NOT NULL,
+  file_name TEXT NOT NULL, relative_path TEXT, target_folder_id INTEGER, total_size INTEGER NOT NULL,
+  chunk_size INTEGER NOT NULL, conflict_mode TEXT NOT NULL, status TEXT NOT NULL DEFAULT 'PAUSED',
+  received_bytes INTEGER NOT NULL DEFAULT 0, expires_at TEXT NOT NULL,
+  FOREIGN KEY(owner_id) REFERENCES users(id) ON DELETE CASCADE, FOREIGN KEY(target_folder_id) REFERENCES folders(id) ON DELETE SET NULL
+);
+CREATE TABLE IF NOT EXISTS upload_chunks (
+  upload_id INTEGER NOT NULL, chunk_index INTEGER NOT NULL, size_bytes INTEGER NOT NULL, storage_path TEXT NOT NULL,
+  PRIMARY KEY(upload_id, chunk_index), FOREIGN KEY(upload_id) REFERENCES uploads(id) ON DELETE CASCADE
+);
+CREATE TABLE IF NOT EXISTS audit_log (
+  id INTEGER PRIMARY KEY AUTOINCREMENT, actor_id INTEGER, action TEXT NOT NULL, target_type TEXT,
+  target_id INTEGER, details TEXT, ip TEXT, created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY(actor_id) REFERENCES users(id) ON DELETE SET NULL
+);
+CREATE TABLE IF NOT EXISTS access_tokens (
+  id INTEGER PRIMARY KEY AUTOINCREMENT, link_id INTEGER NOT NULL, token_hash TEXT NOT NULL UNIQUE,
+  expires_at TEXT NOT NULL, created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY(link_id) REFERENCES links(id) ON DELETE CASCADE
+);

@@ -1,0 +1,1 @@
+package com.avizero.avidrive.repository; import com.avizero.avidrive.domain.LoginAttempt; import org.springframework.data.jpa.repository.JpaRepository; public interface LoginAttemptRepository extends JpaRepository<LoginAttempt,Long>{}

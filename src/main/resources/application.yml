@@ -6,5 +6,18 @@ spring:
   web:
     resources:
       add-mappings: false
+  datasource:
+    url: jdbc:sqlite:${DB_PATH:data/filestorage.db}
+    driver-class-name: org.sqlite.JDBC
+  jpa:
+    hibernate:
+      ddl-auto: none
+    open-in-view: false
+  sql:
+    init:
+      mode: always
+      schema-locations: classpath:schema.sql
+  jackson:
+    time-zone: UTC
 avidrive:
   frontend-origin: ${FRONTEND_ORIGIN:http://localhost:3000}

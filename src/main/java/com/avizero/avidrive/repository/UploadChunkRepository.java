@@ -1,0 +1,1 @@
+package com.avizero.avidrive.repository; import com.avizero.avidrive.domain.*; import org.springframework.data.jpa.repository.JpaRepository; public interface UploadChunkRepository extends JpaRepository<UploadChunk,UploadChunkId>{}

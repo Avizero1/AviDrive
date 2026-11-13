@@ -1,0 +1,1 @@
+package com.avizero.avidrive.repository; import com.avizero.avidrive.domain.Upload; import org.springframework.data.jpa.repository.JpaRepository; public interface UploadRepository extends JpaRepository<Upload,Long>{}

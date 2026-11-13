@@ -1,0 +1,1 @@
+package com.avizero.avidrive.repository; import com.avizero.avidrive.domain.AuditLog; import org.springframework.data.jpa.repository.JpaRepository; public interface AuditLogRepository extends JpaRepository<AuditLog,Long>{}

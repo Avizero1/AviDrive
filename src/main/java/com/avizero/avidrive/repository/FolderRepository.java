@@ -1,0 +1,1 @@
+package com.avizero.avidrive.repository; import com.avizero.avidrive.domain.Folder; import org.springframework.data.jpa.repository.JpaRepository; public interface FolderRepository extends JpaRepository<Folder,Long>{}
