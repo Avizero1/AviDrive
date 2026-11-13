@@ -56,7 +56,7 @@ CREATE TABLE IF NOT EXISTS shared_folder_members (
 );
 CREATE TABLE IF NOT EXISTS uploads (
   id INTEGER PRIMARY KEY AUTOINCREMENT, session_uuid TEXT NOT NULL UNIQUE, owner_id INTEGER NOT NULL,
-  file_name TEXT NOT NULL, relative_path TEXT, target_folder_id INTEGER, total_size INTEGER NOT NULL,
+  file_name TEXT NOT NULL, relative_path TEXT, batch_id TEXT, target_folder_id INTEGER, total_size INTEGER NOT NULL,
   chunk_size INTEGER NOT NULL, conflict_mode TEXT NOT NULL, status TEXT NOT NULL DEFAULT 'PAUSED',
   received_bytes INTEGER NOT NULL DEFAULT 0, expires_at TEXT NOT NULL,
   FOREIGN KEY(owner_id) REFERENCES users(id) ON DELETE CASCADE, FOREIGN KEY(target_folder_id) REFERENCES folders(id) ON DELETE SET NULL
