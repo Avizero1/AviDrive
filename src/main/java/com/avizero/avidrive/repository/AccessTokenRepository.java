@@ -1,1 +1,1 @@
-package com.avizero.avidrive.repository; import com.avizero.avidrive.domain.AccessToken; import org.springframework.data.jpa.repository.JpaRepository; public interface AccessTokenRepository extends JpaRepository<AccessToken,Long>{}
+package com.avizero.avidrive.repository; import com.avizero.avidrive.domain.AccessToken; import java.util.*; import org.springframework.data.jpa.repository.JpaRepository; public interface AccessTokenRepository extends JpaRepository<AccessToken,Long>{Optional<AccessToken> findByTokenHash(String tokenHash);}
