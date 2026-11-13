@@ -1,0 +1,3 @@
+package com.avizero.avidrive.config;
+import jakarta.servlet.*; import jakarta.servlet.http.HttpServletResponse; import java.io.IOException; import org.springframework.stereotype.Component;
+@Component public class SecurityHeadersFilter implements Filter { @Override public void doFilter(ServletRequest req,ServletResponse res,FilterChain chain) throws IOException,ServletException { HttpServletResponse r=(HttpServletResponse)res; r.setHeader("Content-Security-Policy","default-src 'self'"); r.setHeader("X-Frame-Options","DENY"); r.setHeader("X-Content-Type-Options","nosniff"); r.setHeader("Referrer-Policy","strict-origin-when-cross-origin"); r.setHeader("Permissions-Policy","camera=(), microphone=(), geolocation=()"); chain.doFilter(req,res); } }
