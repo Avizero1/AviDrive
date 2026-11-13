@@ -1,0 +1,10 @@
+server:
+  port: ${BACKEND_PORT:8080}
+spring:
+  application:
+    name: avidrive
+  web:
+    resources:
+      add-mappings: false
+avidrive:
+  frontend-origin: ${FRONTEND_ORIGIN:http://localhost:3000}
