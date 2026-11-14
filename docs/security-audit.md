@@ -8,7 +8,7 @@
 | Frontend dependency audit | ✅ | `npm audit --audit-level=high` — 0 vulnerabilities |
 | Frontend build | ✅ | `npm run build` |
 | Maven dependency tree | ✅ | `mvn dependency:tree` |
-| OWASP Dependency-Check | ⏳ | Profile is configured, but execution requires a user-provided `NVD_API_KEY` |
+| OWASP Dependency-Check | ⏳ | `NVD_API_KEY` is missing; `mvn -Psecurity-audit verify -DskipTests -q` timed out without producing a report |
 | Local HTTP smoke | ✅ | `scripts/security-smoke.ps1`: health 200, protected 401, invalid public token 404, hostile CORS denied, security headers present |
 
 Run the Maven dependency audit with a configured key:
@@ -40,3 +40,11 @@ mvn org.owasp:dependency-check-maven:check `
 | Request size limits | ✅ | Header and Tomcat form-post limits configured |
 | Storage path containment | ✅ | Download/content/preview reject paths outside `storage/files` |
 | Manual PC-1…PC-20 HTTP run | ⏳ | Reproducible smoke subset passes; full authenticated/public abuse matrix still requires test fixtures and deployment |
+
+## Latest rerun — 2026-11-14
+
+- `mvn test` — ✅
+- `scripts/security-smoke.ps1` — ✅ (`health=200`, protected `401`, invalid public token `404`, hostile CORS denied, security headers present)
+- `npm audit --audit-level=high` — ✅, 0 vulnerabilities
+- `npm run build` — ✅
+- `mvn -Psecurity-audit verify -DskipTests -q` — ⏳ timeout; no dependency-check report generated because `NVD_API_KEY` is not configured
