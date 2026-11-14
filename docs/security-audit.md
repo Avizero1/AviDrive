@@ -9,7 +9,7 @@
 | Frontend build | ✅ | `npm run build` |
 | Maven dependency tree | ✅ | `mvn dependency:tree` |
 | OWASP Dependency-Check | ⏳ | Profile is configured, but execution requires a user-provided `NVD_API_KEY` |
-| Local HTTP smoke | ✅ | `scripts/security-smoke.ps1`: health 200, protected endpoint 401, security headers present |
+| Local HTTP smoke | ✅ | `scripts/security-smoke.ps1`: health 200, protected 401, invalid public token 404, hostile CORS denied, security headers present |
 
 Run the Maven dependency audit with a configured key:
 
@@ -38,4 +38,5 @@ mvn org.owasp:dependency-check-maven:check `
 | CORS origin | ✅ | Configured frontend origin only |
 | JWT secret handling | ✅ | Startup replaces default placeholder with random 256-bit secret |
 | Request size limits | ✅ | Header and Tomcat form-post limits configured |
+| Storage path containment | ✅ | Download/content/preview reject paths outside `storage/files` |
 | Manual PC-1…PC-20 HTTP run | ⏳ | Reproducible smoke subset passes; full authenticated/public abuse matrix still requires test fixtures and deployment |

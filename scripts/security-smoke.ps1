@@ -21,6 +21,8 @@ try {
   if ($health.StatusCode -ne 200) { throw "Health expected 200, got $($health.StatusCode)" }
   if (-not $health.Headers['Content-Security-Policy']) { throw 'Missing Content-Security-Policy' }
   if (-not $health.Headers['X-Content-Type-Options']) { throw 'Missing X-Content-Type-Options' }
+  try { $cors = Invoke-WebRequest 'http://127.0.0.1:8080/api/health' -Headers @{Origin='https://evil.example'} -UseBasicParsing; if ($cors.Headers['Access-Control-Allow-Origin']) { throw 'Unexpected CORS allow-origin for evil origin' } } catch { if ($_.Exception.Response.StatusCode.value__ -ne 403) { throw } }
   try { Invoke-WebRequest 'http://127.0.0.1:8080/api/profile' -UseBasicParsing | Out-Null; throw 'Protected endpoint unexpectedly succeeded' } catch { if ($_.Exception.Response.StatusCode.value__ -ne 401) { throw "Protected endpoint expected 401, got $($_.Exception.Response.StatusCode.value__)" } }
-  Write-Output 'security smoke: PASS (health=200, protected endpoint=401, security headers present)'
+  try { Invoke-WebRequest 'http://127.0.0.1:8080/api/public/not-a-token/meta' -UseBasicParsing | Out-Null; throw 'Invalid public token unexpectedly succeeded' } catch { if ($_.Exception.Response.StatusCode.value__ -ne 404) { throw "Invalid public token expected 404, got $($_.Exception.Response.StatusCode.value__)" } }
+  Write-Output 'security smoke: PASS (health=200, protected=401, invalid public token=404, CORS restricted, headers present)'
 } finally { if ($process) { Stop-Process $process.Id -Force -ErrorAction SilentlyContinue }; Pop-Location }
