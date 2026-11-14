@@ -8,7 +8,8 @@
 | Frontend dependency audit | ✅ | `npm audit --audit-level=high` — 0 vulnerabilities |
 | Frontend build | ✅ | `npm run build` |
 | Maven dependency tree | ✅ | `mvn dependency:tree` |
-| OWASP Dependency-Check | ⏳ | Requires `NVD_API_KEY`; without it the NVD service rejects the request |
+| OWASP Dependency-Check | ⏳ | Profile is configured, but execution requires a user-provided `NVD_API_KEY` |
+| Local HTTP smoke | ✅ | `scripts/security-smoke.ps1`: health 200, protected endpoint 401, security headers present |
 
 Run the Maven dependency audit with a configured key:
 
@@ -37,4 +38,4 @@ mvn org.owasp:dependency-check-maven:check `
 | CORS origin | ✅ | Configured frontend origin only |
 | JWT secret handling | ✅ | Startup replaces default placeholder with random 256-bit secret |
 | Request size limits | ✅ | Header and Tomcat form-post limits configured |
-| Manual PC-1…PC-20 HTTP run | ⏳ | Local smoke launch was attempted, but the Windows harness could not keep the Spring process reachable; repeat on a running deployment |
+| Manual PC-1…PC-20 HTTP run | ⏳ | Reproducible smoke subset passes; full authenticated/public abuse matrix still requires test fixtures and deployment |
