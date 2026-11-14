@@ -39,6 +39,7 @@ mvn org.owasp:dependency-check-maven:check `
 | JWT secret handling | ✅ | Startup replaces default placeholder with random 256-bit secret |
 | Request size limits | ✅ | Header and Tomcat form-post limits configured |
 | Storage path containment | ✅ | Download/content/preview reject paths outside `storage/files` |
+| Stored-file write/archive containment | ✅ | Edit, ZIP export and public download validate stored paths before filesystem access |
 | Manual PC-1…PC-20 HTTP run | ⏳ | Reproducible smoke subset passes; full authenticated/public abuse matrix still requires test fixtures and deployment |
 
 ## Latest rerun — 2026-11-14
@@ -48,3 +49,10 @@ mvn org.owasp:dependency-check-maven:check `
 - `npm audit --audit-level=high` — ✅, 0 vulnerabilities
 - `npm run build` — ✅
 - `mvn -Psecurity-audit verify -DskipTests -q` — ⏳ timeout; no dependency-check report generated because `NVD_API_KEY` is not configured
+
+## Latest code hardening — 2026-11-14
+
+- Authenticated file editing now validates the stored path before writing and sizing.
+- ZIP export validates each stored path before copying it into an archive.
+- Public-link downloads use the same storage-root containment check.
+- `mvn test` and `git diff --check` — ✅ after these changes.
