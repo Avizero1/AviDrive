@@ -35,4 +35,6 @@ mvn org.owasp:dependency-check-maven:check `
 | Range response correctness | ✅ | Stream skips to requested offset |
 | Security headers | ✅ | CSP, frame denial, nosniff, referrer, permissions, HSTS |
 | CORS origin | ✅ | Configured frontend origin only |
-| Manual PC-1…PC-20 HTTP run | ⏳ | Requires a running deployment and recorded response codes/headers |
+| JWT secret handling | ✅ | Startup replaces default placeholder with random 256-bit secret |
+| Request size limits | ✅ | Header and Tomcat form-post limits configured |
+| Manual PC-1…PC-20 HTTP run | ⏳ | Local smoke launch was attempted, but the Windows harness could not keep the Spring process reachable; repeat on a running deployment |
